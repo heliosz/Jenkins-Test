@@ -11,7 +11,7 @@ general:
 kubernetes:
   containers:
   - containerName: python
-    image: python:${PYTHON_VERSION}
+    image: python:latest
 """)
 
 pipelineWrap(config) {
