@@ -7,7 +7,7 @@ general:
   projectName: 'jenkins-test'
   publishPipelineState: false
   useExtendedVersioning: false
-  buildTool: python
+  versioningApproach: none
 kubernetes:
   containers:
   - containerName: python
