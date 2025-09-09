@@ -1,31 +1,23 @@
-pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out repository...'
-                checkout scm
-            }
-        }
-        
-        stage('Run Unit Tests') {
-            steps {
-                echo 'Running unit tests...'
-                sh 'python3 -m unittest test_app.py -v'
-            }
-        }
-    }
-    
-    post {
-        always {
-            echo 'Pipeline execution completed.'
-        }
-        success {
-            echo 'All tests passed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed. Please check the logs.'
+@Library('pipeline-library@0.5.5') _
+
+import com.creatio.jenkins.PipelineEnvironment
+
+Map config = readYaml(text: """
+general:
+  projectName: 'jenkins-test'
+  publishPipelineState: false
+  useExtendedVersioning: false
+  buildTool: python
+kubernetes:
+  containers:
+  - containerName: python
+    image: python:${PYTHON_VERSION}
+""")
+
+pipelineWrap(config) {
+    stage('Run Unit Tests') {
+        container('python') {
+            sh 'python3 -m unittest test_app.py -v'
         }
     }
 }
